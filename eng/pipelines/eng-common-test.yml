@@ -1,0 +1,70 @@
+# Test eng common changes across language Repos
+resources:
+  repositories:
+    - repository: azure-sdk-for-net
+      type: github
+      name: Azure/azure-sdk-for-net
+      endpoint: azure
+    - repository: azure-sdk-for-js
+      type: github
+      name: Azure/azure-sdk-for-js
+      endpoint: azure
+
+trigger:
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      - eng/common
+
+pr:
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      - eng/common
+
+pool:
+  vmImage: windows-2019
+
+stages:
+  - stage: OverwriteEngCommon
+    jobs:
+      - job: SyncEngCommon
+        displayName: Test Eng Common Tools
+
+        steps:
+        - checkout: self
+        - checkout: azure-sdk-for-net
+        - checkout: azure-sdk-for-js
+
+        - pwsh: |
+            $ToolsCommonDirectory = Join-Path $(Agent.BuildDirectory) 's' "azure-sdk-tools" "eng" "common"
+            $NetCommonDirectory = Join-Path $(Agent.BuildDirectory) 's' "azure-sdk-for-net" "eng" "common"
+            $JSCommonDirectory = Join-Path $(Agent.BuildDirectory) 's' "azure-sdk-for-js" "eng" "common"
+
+            Write-Output $ToolsCommonDirectory
+            Write-Output $NetCommonDirectory
+            Write-Output $JSCommonDirectory
+
+            Copy-Item -Path $ToolsCommonDirectory -Destination $NetCommonDirectory -Force -Recurse
+            Copy-Item -Path $ToolsCommonDirectory -Destination $NetCommonDirectory -Force -Recurse
+          displayName: Overwrite Eng Common Directory in Language Repos
+
+  - template: /$(Build.SourcesDirectory)/azure-sdk-for-net/eng/pipelines/templates/stages/archetype-sdk-client.yml
+    parameters:
+      ServiceDirectory: template
+      ArtifactName: packages
+      Artifacts:
+      - name: Azure.Template
+        safeName: AzureTemplate
+  - template: /$(Build.SourcesDirectory)/azure-sdk-for-js/eng/pipelines/templates/stages/archetype-sdk-client.yml
+    parameters:
+      ServiceDirectory: template
+      Artifacts:
+        - name: azure-template
+          safeName: azuretemplate
+
+
