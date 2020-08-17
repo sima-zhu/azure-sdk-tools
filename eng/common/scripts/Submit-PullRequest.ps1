@@ -95,7 +95,7 @@ else {
 }
 
 
-function AddLabels() 
+function AddLabels
 {
   # Adding labels to the pr.
   if (-not $PRLabel) {
