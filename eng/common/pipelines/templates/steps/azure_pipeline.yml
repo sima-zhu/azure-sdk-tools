@@ -4,7 +4,7 @@ jobs:
     pool:
       vmImage: 'ubuntu-18.04'
     steps:
-    - template: /eng/common/pipelines/templates/steps/create_pull-request.yml 
+    - template: /eng/common/pipelines/templates/steps/create-pull-request.yml 
       parameters:
         BaseBranchName: "master"
         PRBranchName: "test-pr-label"
@@ -14,6 +14,5 @@ jobs:
         RepoName: azure-sdk-tools
         WorkingDirectory: $(System.DefaultWorkingDirectory)
         PRTitle: "testing"
-        ScriptDirectory: eng/common/scripts
         GHReviewersVariable: "sima-zhu" 
         PRLabel: ['bug']
