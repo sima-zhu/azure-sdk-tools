@@ -1,8 +1,6 @@
 jobs:
   - job: Generate
     timeoutInMinutes: 180
-    variables:
-      - template: templates/variables/globals.yml
     pool:
       vmImage: 'ubuntu-18.04'
     steps:
