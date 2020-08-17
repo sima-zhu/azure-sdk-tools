@@ -50,7 +50,7 @@ $headers = @{
 
 $query = "state=open&head=${PROwner}:${PRBranch}&base=${BaseBranch}"
 
-function AddLabels()
+function AddLabels([int] $prNumber)
 {
   # Adding labels to the pr.
   if (-not $PRLabel) {
@@ -60,7 +60,7 @@ function AddLabels()
 
   # Parse the labels from string to array
   $prLabels = @($PRLabel.Split(",") | % { $_.Trim() } | ? { return $_ })
-  $prLabelUri = "https://api.github.com/repos/$RepoOwner/$RepoName/issues/$PRNumber"
+  $prLabelUri = "https://api.github.com/repos/$RepoOwner/$RepoName/issues/$prNumber"
   $labelRequestData = @{
     maintainer_can_modify = $true
     labels                = $prLabels
@@ -74,7 +74,7 @@ function AddLabels()
   }
 
   $resp | Write-Verbose
-  Write-Host -f green "Label added to pull request: https://github.com/$RepoOwner/$RepoName/pull/$PRNumber"
+  Write-Host -f green "Label added to pull request: https://github.com/$RepoOwner/$RepoName/pull/$prNumber"
 }
 
 try {
@@ -91,7 +91,7 @@ if ($resp.Count -gt 0) {
 
     # setting variable to reference the pull request by number
     Write-Host "##vso[task.setvariable variable=Submitted.PullRequest.Number]$($resp[0].number)"
-    $AddLabels
+    AddLabels $resp[0].number
 }
 else {
   $data = @{
@@ -118,5 +118,5 @@ else {
   # setting variable to reference the pull request by number
   Write-Host "##vso[task.setvariable variable=Submitted.PullRequest.Number]$($resp.number)"
 
-  $AddLabels
+  AddLabelsAddLabels $resp[0].number
 }
