@@ -64,6 +64,7 @@ if ($resp.Count -gt 0) {
 
     # setting variable to reference the pull request by number
     Write-Host "##vso[task.setvariable variable=Submitted.PullRequest.Number]$($resp[0].number)"
+    AddLabels
 }
 else {
   $data = @{
@@ -90,6 +91,12 @@ else {
   # setting variable to reference the pull request by number
   Write-Host "##vso[task.setvariable variable=Submitted.PullRequest.Number]$($resp.number)"
 
+  AddLabels
+}
+
+
+function AddLabels() 
+{
   # Adding labels to the pr.
   if (-not $PRLabel) {
     Write-Verbose "There are no labels added to the PR."
