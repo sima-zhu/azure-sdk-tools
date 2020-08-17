@@ -14,7 +14,7 @@ parameters:
   ScriptDirectory: eng/common/scripts
   GHReviewersVariable: '' 
   GHTeamReviewersVariable: ''
-  PRLabel: not-specified
+  PRLabel: ''
 
 steps:
 
