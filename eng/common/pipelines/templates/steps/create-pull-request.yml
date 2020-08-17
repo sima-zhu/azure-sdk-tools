@@ -34,18 +34,18 @@ steps:
   workingDirectory: ${{ parameters.WorkingDirectory }}
   ignoreLASTEXITCODE: true
 
-- task: PowerShell@2
-  displayName: Push changes
-  condition: and(succeeded(), eq(variables['HasChanges'], 'true'))
-  inputs:
-    pwsh: true
-    workingDirectory: ${{ parameters.WorkingDirectory }}
-    filePath: ${{ parameters.ScriptDirectory }}/git-branch-push.ps1
-    arguments: >
-      -PRBranchName "${{ parameters.PRBranchName }}"
-      -CommitMsg "${{ parameters.CommitMsg }}"
-      -GitUrl "https://$(azuresdk-github-pat)@github.com/${{ parameters.PROwner }}/${{ parameters.RepoName }}.git"
-      -PushArgs "${{ parameters.PushArgs }}"
+# - task: PowerShell@2
+#   displayName: Push changes
+#   condition: and(succeeded(), eq(variables['HasChanges'], 'true'))
+#   inputs:
+#     pwsh: true
+#     workingDirectory: ${{ parameters.WorkingDirectory }}
+#     filePath: ${{ parameters.ScriptDirectory }}/git-branch-push.ps1
+#     arguments: >
+#       -PRBranchName "${{ parameters.PRBranchName }}"
+#       -CommitMsg "${{ parameters.CommitMsg }}"
+#       -GitUrl "https://$(azuresdk-github-pat)@github.com/${{ parameters.PROwner }}/${{ parameters.RepoName }}.git"
+#       -PushArgs "${{ parameters.PushArgs }}"
 
 - task: PowerShell@2
   displayName: Create pull request
