@@ -14,5 +14,4 @@ jobs:
         RepoName: azure-sdk-tools
         WorkingDirectory: $(System.DefaultWorkingDirectory)
         PRTitle: "testing"
-        GHReviewersVariable: "sima-zhu" 
         PRLabel: ['bug']
