@@ -4,7 +4,7 @@ jobs:
     pool:
       vmImage: 'ubuntu-18.04'
     steps:
-    - template: eng/common/pipelines/templates/steps/create-pull-request.yml 
+    - template: /eng/common/pipelines/templates/steps/create-pull-request.yml 
       parameters:
         BaseBranchName: "master"
         PRBranchName: "test-pr-label"
