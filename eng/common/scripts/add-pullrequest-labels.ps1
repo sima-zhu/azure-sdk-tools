@@ -21,7 +21,11 @@ if (-not $PRLabel) {
   }
 
 # Add labels to the pull request
+Write-Host "Labels before: $PRLabel"
 $prLabels = @($PRLabel.Split(",") | % { $_.Trim() } | ? { return $_ })
+
+Write-Host "Labels after: $prLabels"
+
 $uri = "https://api.github.com/repos/$RepoOwner/$RepoName/issues/$PRNumber"
 $data = @{
     maintainer_can_modify = $true

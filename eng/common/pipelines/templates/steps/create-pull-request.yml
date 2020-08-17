@@ -14,7 +14,7 @@ parameters:
   ScriptDirectory: eng/common/scripts
   GHReviewersVariable: '' 
   GHTeamReviewersVariable: ''
-  PRLabel: []
+  PRLabel: ''
 
 steps:
 
@@ -90,4 +90,4 @@ steps:
       -RepoName "${{ parameters.RepoName }}"
       -AuthToken "$(azuresdk-github-pat)"
       -PRNumber "$(Submitted.PullRequest.Number)"
-      -PRLabel ['bug']
+      -PRLabel "${{ parameters.PRLabel}}"
