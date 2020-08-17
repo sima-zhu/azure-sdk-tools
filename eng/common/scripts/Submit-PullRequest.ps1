@@ -50,8 +50,36 @@ $headers = @{
 
 $query = "state=open&head=${PROwner}:${PRBranch}&base=${BaseBranch}"
 
+function AddLabels
+{
+  # Adding labels to the pr.
+  if (-not $PRLabel) {
+    Write-Verbose "There are no labels added to the PR."
+    exit 0
+  }
+
+  # Parse the labels from string to array
+  $prLabels = @($PRLabel.Split(",") | % { $_.Trim() } | ? { return $_ })
+  $prLabelUri = "https://api.github.com/repos/$RepoOwner/$RepoName/issues/$PRNumber"
+  $labelRequestData = @{
+    maintainer_can_modify = $true
+    labels                = $prLabels
+  }
+  try {
+    $resp = Invoke-RestMethod -Method PATCH -Headers $headers $prLabelUri -Body ($labelRequestData | ConvertTo-Json)
+  }
+  catch {
+      Write-Error "Invoke-RestMethod $prLabelUri failed with exception:`n$_"
+      exit 1
+  }
+
+  $resp | Write-Verbose
+  Write-Host -f green "Label added to pull request: https://github.com/$RepoOwner/$RepoName/pull/$PRNumber"
+}
+
 try {
   $resp = Invoke-RestMethod -Headers $headers "https://api.github.com/repos/$RepoOwner/$RepoName/pulls?$query"
+  AddLabels
 }
 catch { 
   Write-Error "Invoke-RestMethod [https://api.github.com/repos/$RepoOwner/$RepoName/pulls?$query] failed with exception:`n$_"
@@ -92,32 +120,4 @@ else {
   Write-Host "##vso[task.setvariable variable=Submitted.PullRequest.Number]$($resp.number)"
 
   AddLabels
-}
-
-
-function AddLabels
-{
-  # Adding labels to the pr.
-  if (-not $PRLabel) {
-    Write-Verbose "There are no labels added to the PR."
-    exit 0
-  }
-
-  # Parse the labels from string to array
-  $prLabels = @($PRLabel.Split(",") | % { $_.Trim() } | ? { return $_ })
-  $prLabelUri = "https://api.github.com/repos/$RepoOwner/$RepoName/issues/$PRNumber"
-  $labelRequestData = @{
-    maintainer_can_modify = $true
-    labels                = $prLabels
-  }
-  try {
-    $resp = Invoke-RestMethod -Method PATCH -Headers $headers $prLabelUri -Body ($labelRequestData | ConvertTo-Json)
-  }
-  catch {
-      Write-Error "Invoke-RestMethod $prLabelUri failed with exception:`n$_"
-      exit 1
-  }
-
-  $resp | Write-Verbose
-  Write-Host -f green "Label added to pull request: https://github.com/$RepoOwner/$RepoName/pull/$PRNumber"
 }
