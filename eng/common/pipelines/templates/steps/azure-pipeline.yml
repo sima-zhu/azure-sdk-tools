@@ -1,0 +1,9 @@
+jobs:
+  - job: Generate
+    timeoutInMinutes: 180
+    pool:
+      vmImage: 'ubuntu-18.04'
+    steps:
+    - template: /eng/common/pipelines/templates/steps/verify-links.yml 
+      parameters:
+        Directory: ''
