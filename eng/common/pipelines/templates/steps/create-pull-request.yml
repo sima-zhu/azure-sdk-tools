@@ -62,6 +62,7 @@ steps:
       -PRBranch "${{ parameters.PRBranchName }}"
       -AuthToken "$(azuresdk-github-pat)"
       -PRTitle "${{ parameters.PRTitle }}"
+      -PRLabel "${{ parameters.PRLabel }}"
 
 - task: PowerShell@2
   displayName: Tag a Reviewer on PR
