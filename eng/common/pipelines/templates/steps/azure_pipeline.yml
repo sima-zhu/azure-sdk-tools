@@ -14,4 +14,4 @@ jobs:
         RepoName: azure-sdk-tools
         WorkingDirectory: $(System.DefaultWorkingDirectory)
         PRTitle: "testing"
-        PRLabel: ["bug"]
+        PRLabel: "bug,APIView"

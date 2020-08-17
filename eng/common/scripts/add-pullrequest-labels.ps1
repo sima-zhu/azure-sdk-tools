@@ -21,10 +21,11 @@ if (-not $PRLabel) {
   }
 
 # Add labels to the pull request
+$prLabels = @($PRLabel.Split(",") | % { $_.Trim() } | ? { return $_ })
 $uri = "https://api.github.com/repos/$RepoOwner/$RepoName/issues/$PRNumber"
 $data = @{
     maintainer_can_modify = $true
-    labels                = $PRLabel
+    labels                = $prLabels
 }
 $headers = @{
     Authorization = "bearer $AuthToken"
