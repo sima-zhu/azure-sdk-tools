@@ -62,7 +62,6 @@ function AddLabels([int] $prNumber, [string] $prLabelString)
   $prLabels = @($prLabelString.Split(",") | % { $_.Trim() } | ? { return $_ })
   $prLabelUri = "https://api.github.com/repos/$RepoOwner/$RepoName/issues/$prNumber"
   $labelRequestData = @{
-    maintainer_can_modify = $true
     labels                = $prLabels
   }
   try {
@@ -99,7 +98,6 @@ else {
     head                  = "${PROwner}:${PRBranch}"
     base                  = $BaseBranch
     body                  = $PRBody
-    maintainer_can_modify = $true
   }
 
   try {
