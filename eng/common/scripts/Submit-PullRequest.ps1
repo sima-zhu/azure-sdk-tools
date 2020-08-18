@@ -19,29 +19,29 @@ A personal access token
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
   [Parameter(Mandatory = $true)]
-  $RepoOwner,
+  [string]$RepoOwner,
 
   [Parameter(Mandatory = $true)]
-  $RepoName,
+  [string]$RepoName,
 
   [Parameter(Mandatory = $true)]
-  $BaseBranch,
+  [string]$BaseBranch,
 
   [Parameter(Mandatory = $true)]
-  $PROwner,
+  [string]$PROwner,
 
   [Parameter(Mandatory = $true)]
-  $PRBranch,
+  [string]$PRBranch,
 
   [Parameter(Mandatory = $true)]
-  $AuthToken,
+  [string]$AuthToken,
 
   [Parameter(Mandatory = $true)]
-  $PRTitle,
+  [string]$PRTitle,
   $PRBody = $PRTitle,
 
   [Parameter(Mandatory = $false)]
-  $PRLabels
+  [string]$PRLabels
 )
 
 $headers = @{
@@ -62,6 +62,7 @@ function AddLabels([int] $prNumber, [string] $prLabelString)
   $prLabels = @($prLabelString.Split(",") | % { $_.Trim() } | ? { return $_ })
   $prLabelUri = "https://api.github.com/repos/$RepoOwner/$RepoName/issues/$prNumber"
   $labelRequestData = @{
+    maintainer_can_modify = $true
     labels                = $prLabels
   }
   try {
@@ -98,6 +99,7 @@ else {
     head                  = "${PROwner}:${PRBranch}"
     base                  = $BaseBranch
     body                  = $PRBody
+    maintainer_can_modify = $true
   }
 
   try {
@@ -116,5 +118,5 @@ else {
   # setting variable to reference the pull request by number
   Write-Host "##vso[task.setvariable variable=Submitted.PullRequest.Number]$($resp.number)"
 
-  AddLabelsAddLabels $resp[0].number $PRLabels
+  AddLabels $resp[0].number $PRLabels
 }
