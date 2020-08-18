@@ -231,7 +231,7 @@ if ($PSVersionTable.PSVersion.Major -lt 6)
 {
   LogWarning "Some web requests will not work in versions of PS earlier then 6. You are running version $($PSVersionTable.PSVersion)."
 }
-
+Write-Host "This is the commit $branchReplacementName"
 $badLinks = @();
 $ignoreLinks = @();
 if (Test-Path $ignoreLinksFile)
