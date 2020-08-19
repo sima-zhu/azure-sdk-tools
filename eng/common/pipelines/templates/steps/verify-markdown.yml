@@ -4,8 +4,9 @@ parameters:
   MarkdownFiles: $(dir -r -i *.md) 
 
 steps:
-# - script: sudo npm install -g markdownlint-cli
-#   displayName: Install MarkdownLint CLI
+- script: |
+    call npm install -g markdownlint-cli
+  displayName: Install MarkdownLint CLI
  
 - task: PowerShell@2
   displayName: Lint Markdown files
