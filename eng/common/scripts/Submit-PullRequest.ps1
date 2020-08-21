@@ -15,6 +15,8 @@ The owner of the branch we want to create a pull request for.
 The branch which we want to create a pull request for.
 .PARAMETER AuthToken
 A personal access token
+.PARAMETER PRLabels
+The labels added to the PRs. Multple labels seperated by comma, e.g "bug, service"
 #>
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
@@ -59,22 +61,20 @@ function AddLabels([int] $prNumber, [string] $prLabelString)
   }
 
   # Parse the labels from string to array
-  $prLabels = @($prLabelString.Split(",") | % { $_.Trim() } | ? { return $_ })
+  $prLabelArray = @($prLabelString.Split(",") | % { $_.Trim() } | ? { return $_ })
   $prLabelUri = "https://api.github.com/repos/$RepoOwner/$RepoName/issues/$prNumber"
   $labelRequestData = @{
-    maintainer_can_modify = $true
-    labels                = $prLabels
+    labels                = $prLabelArray
   }
   try {
     $resp = Invoke-RestMethod -Method PATCH -Headers $headers $prLabelUri -Body ($labelRequestData | ConvertTo-Json)
   }
   catch {
       Write-Error "Invoke-RestMethod $prLabelUri failed with exception:`n$_"
-      exit 1
   }
 
   $resp | Write-Verbose
-  Write-Host -f green "Label added to pull request: https://github.com/$RepoOwner/$RepoName/pull/$prNumber"
+  Write-Host -f green "Label(s) [$prLabels] added to pull request: https://github.com/$RepoOwner/$RepoName/pull/$prNumber"
 }
 
 try {
@@ -118,5 +118,5 @@ else {
   # setting variable to reference the pull request by number
   Write-Host "##vso[task.setvariable variable=Submitted.PullRequest.Number]$($resp.number)"
 
-  AddLabels $resp[0].number $PRLabels
+  AddLabels $resp.number $PRLabels
 }
