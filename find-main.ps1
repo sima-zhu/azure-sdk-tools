@@ -1,11 +1,3 @@
-[CmdletBinding()]
-param(
-  [String] $Repo = "azure-sdk-tools"
-)
-
-git clone "github.com/azure/$($Repo)"
-cd $Repo
-
 $files = Get-ChildItem ./ -Recurse -File -Exclude *.map, *.min.js, bootstrap-grid.css, *.min.css, bootstrap.js, bootstrap.bundle.js, bootstrap-reboot.css
 
 foreach($file in $files) {
