@@ -1,3 +1,12 @@
+trigger: none
+
+pr:
+  branches:
+    include:
+      - ci_add_main
+
+pool:
+  vmImage: windows-2019
 - name: Repos
   type: object
   default:
@@ -11,7 +20,7 @@
     - azure-sdk-for-net
     - azure-sdk-for-python
 jobs:
-  - job: CreateDocIndex
+  - job: AddMainBranch
     pool:
       vmImage: windows-2019
       - ${{ each repo in parameters.Repos }}:
