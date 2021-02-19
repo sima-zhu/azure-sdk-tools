@@ -22,14 +22,10 @@ jobs:
     vmImage: 'windows-2019'
   steps:
   - ${{ each repo in parameters.Repos }}:    
-    - template: /eng/pipelines/templates/steps/sync-directory.yml
-      parameters:
-        CommitMessage: "check in changes"
-        DirectoryToSync: "eng/common"
-        UpstreamBranchName: "add_main"
-        BaseBranchName: $(system.pullRequest.targetBranch)
-        SkipCheckingForChanges: true
-        Repos: ${{ parameters.Repos }}
+    - script: |
+        git clone --branch add_main https://github.com/azure/${{ repo }}
+        cd ${{ repo }}
+      displayName: 'Git clone the repo'
     - task: PowerShell@2
       displayName: 'Add main in ci yaml'
       inputs:
