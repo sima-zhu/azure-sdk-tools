@@ -37,7 +37,7 @@ jobs:
         - template: /eng/common/pipelines/templates/steps/create-pull-request.yml
           parameters:
             RepoName: 'Azure'
-            RepoOwner: "${{ parameters.Repo }}"
+            RepoOwner: "${{ repo }}"
             PRBranchName: 'add_main'
             CommitMsg: "Added main branch under trigger and pr in ci yml."
             PRTitle: "Added main branch under trigger and pr in ci yml."
