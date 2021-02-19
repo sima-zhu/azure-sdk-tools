@@ -17,29 +17,29 @@ trigger: none
 pool:
   vmImage: windows-2019
 jobs:
-  - job: AddMainBranch
-    pool:
+- job: AddMainBranch
+  pool:
     vmImage: 'windows-2019'
-    steps:
+  steps:
+  - script: |
+      Write-Host "I am here 1"
+    displayName: 'test1'
+  - ${{ each repo in parameters.Repos }}:
     - script: |
-        Write-Host "I am here 1"
+        Write-Host "I am here 2"
       displayName: 'test1'
-    - ${{ each repo in parameters.Repos }}:
-      - script: |
-          Write-Host "I am here 2"
-        displayName: 'test1'
-      - task: PowerShell@2
-        displayName: 'Add main in ci yaml'
-        inputs:
-          pwsh: true
-          filePath: $(Build.SourcesDirectory)/eng/common/scripts/add_main.ps1 
-          arguments: >
-            -repo: "${{ repo }}"
-      - template: /eng/common/pipelines/templates/steps/create-pull-request.yml
-        parameters:
-          RepoName: 'Azure'
-          RepoOwner: "${{ repo }}"
-          PRBranchName: 'add_main'
-          CommitMsg: "Added main branch under trigger and pr in ci yml."
-          PRTitle: "Added main branch under trigger and pr in ci yml."
-          BaseBranchName: 'master'
+    - task: PowerShell@2
+      displayName: 'Add main in ci yaml'
+      inputs:
+        pwsh: true
+        filePath: $(Build.SourcesDirectory)/eng/common/scripts/add_main.ps1 
+        arguments: >
+          -repo: "${{ repo }}"
+    - template: /eng/common/pipelines/templates/steps/create-pull-request.yml
+      parameters:
+        RepoName: 'Azure'
+        RepoOwner: "${{ repo }}"
+        PRBranchName: 'add_main'
+        CommitMsg: "Added main branch under trigger and pr in ci yml."
+        PRTitle: "Added main branch under trigger and pr in ci yml."
+        BaseBranchName: 'master'
