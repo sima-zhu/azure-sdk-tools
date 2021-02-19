@@ -29,6 +29,15 @@ jobs:
         filePath: $(Build.SourcesDirectory)/eng/common/scripts/add_main.ps1 
         arguments: >
           -repo: "${{ repo }}"
+    
+    - template: ./templates/steps/sync-directory.yml
+      parameters:
+        CommitMessage: "check in changes"
+        DirectoryToSync: "eng/common"
+        UpstreamBranchName: "add_main"
+        BaseBranchName: $(system.pullRequest.targetBranch)
+        SkipCheckingForChanges: true
+        Repos: ${{ parameters.Repos }}
     - template: /eng/common/pipelines/templates/steps/create-pull-request.yml
       parameters:
         RepoName: 'Azure'
@@ -37,3 +46,4 @@ jobs:
         CommitMsg: "Added main branch under trigger and pr in ci yml."
         PRTitle: "Added main branch under trigger and pr in ci yml."
         BaseBranchName: 'master'
+    
