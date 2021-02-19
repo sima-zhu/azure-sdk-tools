@@ -30,7 +30,7 @@ jobs:
         arguments: >
           -repo: "${{ repo }}"
     
-    - template: /eng/common/pipelines/templates/steps/sync-directory.yml
+    - template: /eng/pipelines/templates/steps/sync-directory.yml
       parameters:
         CommitMessage: "check in changes"
         DirectoryToSync: "eng/common"
