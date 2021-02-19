@@ -33,7 +33,7 @@ jobs:
             pwsh: true
             filePath: $(Build.SourcesDirectory)/eng/common/scripts/add_main.ps1 
             arguments: >
-              -repo: "${{ parameters.Repos }}"
+              -repo: "${{ repo }}"
         - template: /eng/common/pipelines/templates/steps/create-pull-request.yml
           parameters:
             RepoName: 'Azure'
