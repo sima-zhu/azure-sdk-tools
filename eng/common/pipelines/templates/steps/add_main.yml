@@ -11,16 +11,7 @@ parameters:
     - azure-sdk-for-js
     - azure-sdk-for-net
     - azure-sdk-for-python
-trigger: none
-
-pr:
-  branches:
-    include:
-      - ci_add_main
-
-pool:
-  vmImage: windows-2019
-
+    
 jobs:
   - job: AddMainBranch
     pool:
