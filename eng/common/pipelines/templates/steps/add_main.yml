@@ -21,13 +21,7 @@ jobs:
   pool:
     vmImage: 'windows-2019'
   steps:
-  - script: |
-      Write-Host "I am here 1"
-    displayName: 'test1'
   - ${{ each repo in parameters.Repos }}:
-    - script: |
-        Write-Host "I am here 2"
-      displayName: 'test1'
     - task: PowerShell@2
       displayName: 'Add main in ci yaml'
       inputs:
