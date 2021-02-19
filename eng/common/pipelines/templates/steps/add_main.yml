@@ -25,8 +25,8 @@ jobs:
   - job: AddMainBranch
     pool:
       vmImage: windows-2019
+      steps:
       - ${{ each repo in parameters.Repos }}:
-        steps:
         - task: PowerShell@2
           displayName: 'Add main in ci yaml'
           inputs:
