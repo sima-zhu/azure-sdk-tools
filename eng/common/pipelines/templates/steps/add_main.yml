@@ -1,0 +1,23 @@
+# intended to be used as part of a release process
+parameters:
+  Repo: 'not-specified'
+jobs:
+  - job: CreateDocIndex
+    pool:
+      vmImage: windows-2019
+      steps:
+      - task: PowerShell@2
+        displayName: 'Add main in ci yaml'
+        inputs:
+          pwsh: true
+          filePath: $(Build.SourcesDirectory)/eng/common/scripts/add_main.ps1 
+          arguments: >
+            -repo: "${{ parameters.Repo }}"
+      - template: /eng/common/pipelines/templates/steps/create-pull-request.yml
+        parameters:
+          RepoName: 'Azure'
+          RepoOwner: "${{ parameters.Repo }}"
+          PRBranchName: 'add_main'
+          CommitMsg: "Added main branch under trigger and pr in ci yml."
+          PRTitle: "Added main branch under trigger and pr in ci yml."
+          BaseBranchName: 'master'
