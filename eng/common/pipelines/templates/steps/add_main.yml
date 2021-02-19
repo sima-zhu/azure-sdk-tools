@@ -11,11 +11,13 @@ parameters:
     - azure-sdk-for-js
     - azure-sdk-for-net
     - azure-sdk-for-python
+pr: none
 
+trigger: none
+pool:
+  vmImage: windows-2019
 jobs:
   - job: AddMainBranch
-    pool:
-      vmImage: windows-2019
       steps:
       - pwsh: |
           Write-Host "I am here 1"
