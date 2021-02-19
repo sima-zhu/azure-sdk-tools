@@ -2,15 +2,15 @@ parameters:
 - name: Repos
   type: object
   default:
-    - azure-sdk-for-android
-    - azure-sdk-for-c
-    - azure-sdk-for-cpp
-    - azure-sdk-for-go
-    - azure-sdk-for-ios
+    # - azure-sdk-for-android
+    # - azure-sdk-for-c
+    # - azure-sdk-for-cpp
+    # - azure-sdk-for-go
+    # - azure-sdk-for-ios
     - azure-sdk-for-java
-    - azure-sdk-for-js
-    - azure-sdk-for-net
-    - azure-sdk-for-python
+    # - azure-sdk-for-js
+    # - azure-sdk-for-net
+    # - azure-sdk-for-python
 pr: none
 
 trigger: none
@@ -21,15 +21,7 @@ jobs:
   pool:
     vmImage: 'windows-2019'
   steps:
-  - ${{ each repo in parameters.Repos }}:
-    - task: PowerShell@2
-      displayName: 'Add main in ci yaml'
-      inputs:
-        pwsh: true
-        filePath: $(Build.SourcesDirectory)/eng/common/scripts/add_main.ps1 
-        arguments: >
-          -repo: "${{ repo }}"
-    
+  - ${{ each repo in parameters.Repos }}:    
     - template: /eng/pipelines/templates/steps/sync-directory.yml
       parameters:
         CommitMessage: "check in changes"
@@ -38,6 +30,14 @@ jobs:
         BaseBranchName: $(system.pullRequest.targetBranch)
         SkipCheckingForChanges: true
         Repos: ${{ parameters.Repos }}
+    - task: PowerShell@2
+      displayName: 'Add main in ci yaml'
+      inputs:
+        pwsh: true
+        filePath: $(Build.SourcesDirectory)/eng/common/scripts/add_main.ps1 
+        arguments: >
+          -repo: "${{ repo }}"
+
     - template: /eng/common/pipelines/templates/steps/create-pull-request.yml
       parameters:
         RepoName: 'Azure'
