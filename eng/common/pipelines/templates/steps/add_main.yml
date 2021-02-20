@@ -23,7 +23,8 @@ jobs:
   steps:
   - ${{ each repo in parameters.Repos }}:    
     - script: |
-        git clone --branch add_main https://github.com/azure/${{ repo }}
+        git clone https://github.com/azure/${{ repo }}
+        git checkout -b add_main
         cd ${{ repo }}
       displayName: 'Git clone the repo'
     - task: PowerShell@2
