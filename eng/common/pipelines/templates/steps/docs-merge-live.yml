@@ -1,0 +1,48 @@
+# intended to be used as part of a release process
+parameters:
+  ArtifactLocation: 'not-specified'
+  PackageRepository: 'not-specified'
+  ReleaseSha: 'not-specified'
+  RepoId: $(Build.Repository.Name)
+  WorkingDirectory: ''
+  ScriptDirectory: eng/common/scripts
+  TargetDocRepoName: ''
+  TargetDocRepoOwner: ''
+  PRBranchName: 'master-rdme'
+  SourceBranchName: 'master-test'
+  PRLabels: 'auto-merge'
+  ArtifactName: ''
+  Language: ''
+  DocRepoDestinationPath: '' #usually docs-ref-services/
+  CIConfigs: '[]'
+  GHReviewersVariable: '' 
+  GHTeamReviewersVariable: '' # externally set, as eng-common does not have the identity-resolver. Run as pre-step
+  OnboardingBranch: ''
+  CloseAfterOpenForTesting: false
+  SkipPackageJson: false
+
+steps:
+- pwsh: |
+    $ciLastCommit = git log --author="VSC-Service-Account" --pretty=format:'%H' -n 1
+    echo "##vso[task.setvariable variable=CICommit]$ciLastCommit"
+  displayName: Fetch the last commit for Job CI commits.
+  
+- pwsh: |
+    git reset --hard $(CICommit)
+    git checkout -b for-release
+  displayName: 'Checkout new branch 'for-release''
+  ignoreLASTEXITCODE: false
+
+- template: /eng/common/pipelines/templates/steps/create-pull-request.yml
+  parameters:
+    RepoName: ${{ parameters.TargetDocRepoName }}
+    RepoOwner: ${{ parameters.TargetDocRepoOwner }}
+    PRBranchName: for-release
+    CommitMsg: "Daily merge from most recent CI job commit to live."
+    PRTitle: "Merge from recent CI job to live"
+    WorkingDirectory: ${{ parameters.WorkingDirectory }}/repo
+    ScriptDirectory: ${{ parameters.WorkingDirectory }}/${{ parameters.ScriptDirectory }}
+    GHReviewersVariable: ${{ parameters.GHReviewersVariable }}
+    GHTeamReviewersVariable: ${{ parameters.GHTeamReviewersVariable }}
+    CloseAfterOpenForTesting: $false
+
