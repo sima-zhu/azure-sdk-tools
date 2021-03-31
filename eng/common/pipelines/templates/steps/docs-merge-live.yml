@@ -23,6 +23,10 @@ parameters:
 
 steps:
 - pwsh: |
+    git clone https://github.com/${{ parameters.TargetDocRepoOwner }}/${{ parameters.TargetDocRepoName }} ${{ parameters.WorkingDirectory }}/repo
+  displayName: Clone Documentation Repository
+  ignoreLASTEXITCODE: false
+- pwsh: |
     $ciLastCommit = git log --author="VSC-Service-Account" --pretty=format:'%H' -n 1
     echo "##vso[task.setvariable variable=CICommit]$ciLastCommit"
   displayName: Fetch the last commit for Job CI commits.
