@@ -1,5 +1,5 @@
 $files = Get-ChildItem ./ -Recurse -File -Exclude *.map, *.min.js, bootstrap-grid.css, *.min.css, bootstrap.js, bootstrap.bundle.js, bootstrap-reboot.css
-
+$output = @()
 foreach($file in $files) {
     $contentRaw = Get-Content $file -Raw
     if ($contentRaw -match "master") {
@@ -7,9 +7,12 @@ foreach($file in $files) {
         $lineNum = 1
         foreach ($line in $content) {
             if ($line -match "master") {
-                Write-Host "$($file.FullName) : $lineNum"
+                $logs = "$($file.FullName) : $lineNum"
+                Write-Host $logs
+                $output += $logs
             }
             $lineNum = $lineNum + 1
         }
     }
 }
+$output | Out-File -append ./java_mater.txt
