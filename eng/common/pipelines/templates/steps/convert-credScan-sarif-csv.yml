@@ -1,0 +1,22 @@
+steps:
+- pwsh: |
+    $results = (Get-Content $(Pipeline.Workspace)\.gdn\.r\CredScan\001\CredScan-matches.sarif | ConvertFrom-Json).runs.results
+    $csvRows = @()
+    $results | ForEach-Object {
+      $csvRows += [pscustomobject]@{
+        ruleId = $_.ruleId
+        ruleIndex = $_.ruleIndex
+        fingerprints = $_.fingerprints
+        message = $_.message
+        properties = $_.properties
+        rank = $_.rank
+        fileName = $_.analysisTarget.uri
+        startLine = $_.locations.physicalLocation.region.startLine
+        startColumn = $_.locations.physicalLocation.region.startColumn
+        endLine = $_.locations.physicalLocation.region.endLine
+        endColumn = $_.locations.physicalLocation.region.endColumn
+        level = $_.level
+      }
+    } 
+    $csvRows | Export-Csv -Path $(Pipeline.Workspace)\.gdn\.r\CredScan\001\CredScan-matches.csv -NoTypeInformation
+  displayName: Add converted csv file for CredScan-matches.sarif
